@@ -12,7 +12,7 @@ class RegisterScreen extends StatelessWidget {
       appBar: AppBar(title: Text('New User')),
       body: BlocProvider(
         create: (context) => RegisterCubit(),
-        child: const _RegisterView()
+        child: const _RegisterView(),
       ),
     );
   }
@@ -31,65 +31,49 @@ class _RegisterView extends StatelessWidget {
             children: const [
               FlutterLogo(size: 100),
               _RegisterForm(),
-              SizedBox(height: 20)
+              SizedBox(height: 20),
             ],
           ),
         ),
-      )
+      ),
     );
   }
 }
 
-class _RegisterForm extends StatefulWidget {
+class _RegisterForm extends StatelessWidget {
   const _RegisterForm();
-
-  @override
-  State<_RegisterForm> createState() => _RegisterFormState();
-}
-
-class _RegisterFormState extends State<_RegisterForm> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final registerCubit = context.watch<RegisterCubit>();
+    final username = registerCubit.state.username;
+    final password = registerCubit.state.password;
 
     return Form(
-      key: _formKey,
       child: Column(
         children: [
           CustomTextFormField(
-            onChanged: (value) {
-              registerCubit.updateUsername(value);
-              _formKey.currentState?.validate();
-            },
-            validator: (value) {
-              if (value == null || value.isEmpty || value.trim().isEmpty) {
-                return 'Username is required';
-              }
-
-              if (value.length < 6) {
-                return 'Username must be at least 6 characters long';
-              }
-
-              return null;
-            },
             label: 'Username',
+            onChanged: (value) => registerCubit.updateUsername(value),
+            errorText: username.isPure || username.isValid
+                ? null
+                : 'Invalid username',
           ),
           const SizedBox(height: 10),
           CustomTextFormField(
             onChanged: (value) {
               registerCubit.updateEmail(value);
-              _formKey.currentState?.validate();
             },
             validator: (value) {
               if (value == null || value.isEmpty || value.trim().isEmpty) {
                 return 'Email is required';
               }
 
-              final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,5}$');
+              final emailRegex = RegExp(
+                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,5}$',
+              );
 
-              if (!emailRegex .hasMatch(value)) {
+              if (!emailRegex.hasMatch(value)) {
                 return 'Please enter a valid email address';
               }
 
@@ -99,40 +83,23 @@ class _RegisterFormState extends State<_RegisterForm> {
           ),
           const SizedBox(height: 10),
           CustomTextFormField(
-            onChanged: (value) {
-              registerCubit.updatePassword(value);
-              _formKey.currentState?.validate();
-            },
-            validator: (value) {
-              if (value == null || value.isEmpty || value.trim().isEmpty) {
-                return 'Password is required';
-              }
-
-              if (value.length < 8) {
-                return 'Password must be at least 8 characters long';
-              }
-
-              return null;
-            },
             label: 'Password',
+            onChanged: (value) => registerCubit.updatePassword(value),
+            errorText: password.isPure || password.isValid
+                ? null
+                : 'Invalid password',
             obscureText: true,
           ),
           const SizedBox(height: 20),
           FilledButton.tonalIcon(
-              onPressed: () {
-                // bool? isValid = _formKey.currentState?.validate();
-
-                // if (isValid == null || !isValid) {
-                //   return;
-                // }
-
-                registerCubit.onSubmit();
-              },
-              icon: const Icon(Icons.save),
-              label: const Text('Sign Up')
+            onPressed: () {
+              registerCubit.onSubmit();
+            },
+            icon: const Icon(Icons.save),
+            label: const Text('Sign Up'),
           ),
         ],
-      )
+      ),
     );
   }
 }
