@@ -7,7 +7,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:ListView(
+      body: ListView(
         children: [
           ListTile(
             title: const Text('Cubits'),
@@ -23,10 +23,16 @@ class HomeScreen extends StatelessWidget {
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Divider()
-          )
+            child: Divider(),
+          ),
+          ListTile(
+            title: const Text('New User'),
+            subtitle: const Text('A simple register form'),
+            trailing: Icon(Icons.arrow_forward_ios_rounded),
+            onTap: () => context.push('/register'),
+          ),
         ],
-      )
+      ),
     );
   }
 }
