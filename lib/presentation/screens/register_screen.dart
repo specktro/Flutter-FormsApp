@@ -55,9 +55,7 @@ class _RegisterForm extends StatelessWidget {
           CustomTextFormField(
             label: 'Username',
             onChanged: (value) => registerCubit.updateUsername(value),
-            errorText: username.isPure || username.isValid
-                ? null
-                : 'Invalid username',
+            errorText: username.errorMessage,
           ),
           const SizedBox(height: 10),
           CustomTextFormField(
@@ -85,9 +83,7 @@ class _RegisterForm extends StatelessWidget {
           CustomTextFormField(
             label: 'Password',
             onChanged: (value) => registerCubit.updatePassword(value),
-            errorText: password.isPure || password.isValid
-                ? null
-                : 'Invalid password',
+            errorText: password.errorMessage,
             obscureText: true,
           ),
           const SizedBox(height: 20),
